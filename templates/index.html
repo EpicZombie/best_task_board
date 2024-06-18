@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="current-task">
+        <h2>正在做</h2>
+        {% if current_task %}
+            <div>
+                <h3>{{ current_task.title }}</h3>
+                {% if edit_mode %}
+                    <form action="{{ url_for('save_description') }}" method="post">
+                        <textarea name="new_description" rows="10" cols="50">{{ current_task.description }}</textarea><br>
+                        <input type="submit" value="保存" class="btn orange">
+                    </form>
+                {% else %}
+                    <p>{{ current_task.description }}</p>
+                    <form action="{{ url_for('toggle_edit_mode') }}" method="post">
+                        <input type="hidden" name="edit_mode" value="true">
+                        <button type="submit" class="btn orange">编辑</button>
+                    </form>
+                {% endif %}
+                <p>相关上下文：</p>
+                <ul>
+                    {% for item in current_task.context %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                    <li>
+                        <form action="{{ url_for('add_context') }}" method="post">
+                            <input type="text" name="new_context" placeholder="添加相关上下文" class="input-text">
+                            <button type="submit" class="btn orange">添加</button>
+                        </form>
+                    </li>
+                </ul>
+                <form action="{{ url_for('stop_task') }}" method="post">
+                    <button type="submit" class="btn orange">标记完成</button>
+                </form>
+            </div>
+        {% else %}
+            <p>无正在进行的任务</p>
+        {% endif %}
+    </div>
+    <div id="pending-tasks">
+        <h2>待做</h2>
+        <ul>
+            {% for task in pending_tasks %}
+                <li>
+                    <div>
+                        <h3>{{ task.title }}</h3>
+                        <p>{{ task.description }}</p>
+                        <form action="{{ url_for('switch_task') }}" method="post">
+                            <input type="hidden" name="task_title" value="{{ task.title }}">
+                            <button type="submit" class="btn orange">做这个</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

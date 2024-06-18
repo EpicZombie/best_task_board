@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑任务描述</title>
+</head>
+<body>
+    <h2>编辑任务描述</h2>
+    <form action="{{ url_for('edit_description') }}" method="post">
+        <textarea name="new_description" rows="4" cols="50">{{ current_task.description }}</textarea><br><br>
+        <input type="submit" value="确认">
+    </form>
+</body>
+</html>
